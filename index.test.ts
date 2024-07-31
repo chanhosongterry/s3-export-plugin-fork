@@ -35,7 +35,7 @@ const defaultConfig: PluginConfig = {
     s3BucketEndpoint: '',
     prefix: 'custom_prefix_',
     uploadFormat: 'jsonl',
-    compression: 'gzip',
+    compression: 'no compression',
     signatureVersion: '',
     sse: 'disabled',
     uploadMinutes: '1',
