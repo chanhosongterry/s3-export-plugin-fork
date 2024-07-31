@@ -1,6 +1,6 @@
 import { S3 } from 'aws-sdk'
 import { randomBytes } from 'crypto'
-import { brotliCompressSync, gzipSync } from 'zlib'
+import pako from 'pako';
 import { Plugin, PluginMeta, ProcessedPluginEvent, RetryError } from '@posthog/plugin-scaffold'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
 
@@ -111,13 +111,10 @@ export const sendBatchToS3 = async (events: ProcessedPluginEvent[], meta: Plugin
 
     if (config.compression === 'gzip') {
         params.Key = `${params.Key}.gz`
-        params.Body = gzipSync(params.Body as Buffer)
+        params.Body = Buffer.from(pako.gzip(params.Body as Buffer))
     }
 
-    if (config.compression === 'brotli') {
-        params.Key = `${params.Key}.br`
-        params.Body = brotliCompressSync(params.Body as Buffer)
-    }
+    
 
     if (config.sse !== 'disabled') {
         params.ServerSideEncryption = config.sse
